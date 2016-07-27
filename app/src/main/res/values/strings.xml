@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Riddler</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_riddle">RiddleActivity</string>
+    <string name="answer_text">Enter your answer here</string>
+    <string name="title_activity_transition">TransitionActivity</string>
+</resources>
