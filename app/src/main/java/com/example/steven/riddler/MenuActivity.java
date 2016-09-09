@@ -1,5 +1,6 @@
 package com.example.steven.riddler;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -20,14 +22,15 @@ public class MenuActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Button mapButton = (Button) findViewById(R.id.map);
+        mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                startMap();
+
             }
         });
+
     }
 
     @Override
@@ -52,13 +55,17 @@ public class MenuActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void startMap(){
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
+    }
+
     public void startRiddler(View view){
         Intent intent = new Intent(this, RiddleActivity.class);
-        SharedPreferences settings = getSharedPreferences("level_settings", 0);
-        int level = settings.getInt("current_level", 1);
-        if(level>5)
-            level = 1;
-        intent.putExtra("LEVEL", level);
+        SharedPreferences settings = getSharedPreferences(getString(R.string.pref_key_id), Context.MODE_PRIVATE);
+        int level = settings.getInt(getString(R.string.pref_level), 0);
+
+        intent.putExtra(getString(R.string.intent_level), level);
         startActivity(intent);
     }
 

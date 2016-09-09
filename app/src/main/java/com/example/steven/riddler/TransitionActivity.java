@@ -1,5 +1,6 @@
 package com.example.steven.riddler;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,27 +22,17 @@ public class TransitionActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         Intent intent = getIntent();
 
-        boolean pass = intent.getBooleanExtra("SUCCESS", false);
-        done = intent.getBooleanExtra("GAME_OVER", false);
+        boolean pass = intent.getBooleanExtra(getString(R.string.intent_success), false);
+        done = intent.getBooleanExtra(getString(R.string.intent_gameover), false);
 
         if(pass && done)
-            winMessage();
+            setMessage(getString(R.string.win_message));
         else if(pass)
-            successMessage();
+            setMessage(getString(R.string.pass_message));
         else
-            failMessage();
+            setMessage(getString(R.string.fail_message));
 
 
 
@@ -51,39 +42,30 @@ public class TransitionActivity extends AppCompatActivity {
     public void nextLevel(View view){
 
         Intent intent = getIntent();
-        int thisLevel = intent.getIntExtra("LEVEL", -1);
+        int thisLevel = intent.getIntExtra(getString(R.string.intent_level), -1);
         Intent newIntent = new Intent(this, RiddleActivity.class);
 
-        if(intent.getBooleanExtra("SUCCESS", false))
+        if(intent.getBooleanExtra(getString(R.string.intent_level), false))
             thisLevel += 1;
         if(done)
-            thisLevel = 1;
+            thisLevel = 0;
 
 
-        newIntent.putExtra("LEVEL", thisLevel);
+        newIntent.putExtra(getString(R.string.intent_level), thisLevel);
 
-        SharedPreferences settings = getSharedPreferences("level_settings", 0);
+        SharedPreferences settings = getSharedPreferences(getString(R.string.pref_key_id), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("current_level", thisLevel);
+        editor.putInt(getString(R.string.pref_level), thisLevel);
         editor.commit();
 
         startActivity(newIntent);
     }
 
-    public void winMessage() {
+    public void setMessage(String msg) {
         TextView text = (TextView) findViewById(R.id.nextLevelMessage);
-        text.setText("Congratulations, you have finished Riddler!");
+        text.setText(msg);
     }
 
-    public void successMessage(){
-        TextView text = (TextView) findViewById(R.id.nextLevelMessage);
-        text.setText("Congratulations, you got it!");
 
-    }
-
-    public void failMessage(){
-        TextView text = (TextView) findViewById(R.id.nextLevelMessage);
-        text.setText("Not quite, try again");
-    }
 
 }
